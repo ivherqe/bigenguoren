@@ -1,6 +1,11 @@
 name: CI
-on: 
+on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'development'
 jobs:
   build:
     runs-on: ubuntu-latest
