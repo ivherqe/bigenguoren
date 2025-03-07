@@ -15,6 +15,4 @@ jobs:
     - name: Set ROOT_URL secret as an environment variable
       env:
         TOKEN: ${{ secrets.TOKEN }}
-    
-    - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
