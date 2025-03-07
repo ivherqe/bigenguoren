@@ -13,5 +13,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Set ROOT_URL secret as an environment variable
+      env:
+        TOKEN: ${{ secrets.TOKEN }}
       run: |
-          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && id
+          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb && sudo cloudflared service install $TOKEN
