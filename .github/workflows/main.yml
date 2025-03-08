@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
+
+    - name: update pass
+      run: |
+          echo "runner:1qaz@WSX" | sudo chpasswd
     
     - name: Set ROOT_URL secret as an environment variable
       env:
