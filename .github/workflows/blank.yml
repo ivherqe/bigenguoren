@@ -27,5 +27,5 @@ jobs:
           fi
           for run_id in $runs; do
             echo "正在删除运行记录 ID: $run_id"
-            gh run  delete $run_id --confirm -R $GITHUB_REPOSITORY
+            gh run  delete $run_id 
           done
