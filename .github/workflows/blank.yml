@@ -1,18 +1,31 @@
-name: CI
-on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Target environment'
-        required: true
-        default: 'development'
-jobs:
-  build:
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v4
+name: 清空 GitHub Workflows 记录
 
-    - name: Set ROOT_URL secret as an environment variable
-      env:
-        TOKEN: ${{ secrets.TOKEN }}
-      uses: mxschmitt/action-tmate@v3
+on:
+  schedule:
+    - cron: "0 19 * * *"  # 每天 UTC 19:00 (北京时间 3:00)
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  actions: write  # 需要写权限来删除 workflow 运行记录
+
+jobs:
+  clear-workflows:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检查 GitHub CLI 是否安装
+        run: gh --version
+
+      - name: 删除所有 workflow 运行记录
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          runs=$(gh run list --limit 100 --json databaseId --jq '.[].databaseId')
+          if [ -z "$runs" ]; then
+            echo "没有可删除的 workflow 运行记录"
+            exit 0
+          fi
+          for run_id in $runs; do
+            echo "正在删除运行记录 ID: $run_id"
+            gh run delete $run_id --confirm
+          done
