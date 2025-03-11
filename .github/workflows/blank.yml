@@ -20,12 +20,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          runs=$(gh run list --limit 100 --json databaseId --jq '.[].databaseId')
+          runs=$(gh run list -R $GITHUB_REPOSITORY  --limit 100 --json databaseId --jq '.[].databaseId')
           if [ -z "$runs" ]; then
             echo "没有可删除的 workflow 运行记录"
             exit 0
           fi
           for run_id in $runs; do
             echo "正在删除运行记录 ID: $run_id"
-            gh run delete $run_id --confirm
+            gh run  delete $run_id --confirm -R $GITHUB_REPOSITORY
           done
